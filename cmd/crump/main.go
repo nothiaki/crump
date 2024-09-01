@@ -1,9 +1,21 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"log"
+
+	"github.com/gin-gonic/gin"
+	"github.com/nothiaki/crump/api"
+	"github.com/nothiaki/crump/db"
+)
 
 func main() {
-  r := gin.Default()
+  _, err := db.NewPgStore()
+  if err != nil {
+    log.Fatal(err)
+  }
 
-  r.Run()
+  server := gin.Default()
+  api.InitRouter(server)
+
+  server.Run()
 }
