@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	userService "github.com/nothiaki/crump/internal/service"
+	userRepo "github.com/nothiaki/crump/internal/repo"
 	"github.com/nothiaki/crump/model"
 )
 
@@ -15,11 +15,12 @@ func Create(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "The provided data is invalid."})
 		return
 	}
+  //shoul implement more handlin
 
-	if err := userService.Create(user); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Show error"})
+	if err := userRepo.Insert(user); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err})
 		return
 	}
 
-	c.JSON(http.StatusCreated, nil)
+	c.JSON(http.StatusCreated, gin.H{})
 }
