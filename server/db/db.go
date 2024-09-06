@@ -2,18 +2,22 @@ package db
 
 import (
 	"database/sql"
-	"log"
 
-  _ "github.com/lib/pq"
+	_ "github.com/lib/pq"
 )
 
-var Conn *sql.DB
+var conn *sql.DB
 
-func NewPgStore() (*sql.DB, error) {
-  Coon, err := sql.Open("postgres", "user= dbname=crump sslmode=disable")
+func OpenConn() error {
+  var err error
+  conn, err = sql.Open("postgres", "user=postgres dbname=crump sslmode=disable")
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 
-  return Coon, nil
+  return nil
+}
+
+func GetConn() *sql.DB {
+  return conn
 }
