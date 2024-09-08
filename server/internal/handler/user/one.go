@@ -1,7 +1,6 @@
 package userHandler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +17,8 @@ func One(c *gin.Context) {
 
   user, err := userRepo.SelectById(id)
   if err != nil {
-    fmt.Println(err)
+    c.JSON(http.StatusBadRequest, gin.H{"message": "There is no user with the provided id."})
+    return
   }
 
   c.JSON(http.StatusOK, gin.H{"user": user})

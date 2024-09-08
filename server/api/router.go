@@ -10,6 +10,7 @@ func InitRouter(router *gin.Engine) {
 	v1 := router.Group("/v1")
   {
     v1.GET("/users/:id", userHandler.One)
+    v1.GET("/users", userHandler.Many)
 		v1.POST("/users", authHandler.Register)
 	}
 }
