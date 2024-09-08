@@ -8,7 +8,7 @@ import (
 
 var conn *sql.DB
 
-func OpenConn() error {
+func MustOpenConn() error {
   var err error
   conn, err = sql.Open("postgres", "user=postgres dbname=crump sslmode=disable")
 	if err != nil {

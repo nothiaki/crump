@@ -1,22 +1,22 @@
 package userRepo
 
 import (
-	"fmt"
-
 	"github.com/nothiaki/crump/db"
 	"github.com/nothiaki/crump/model"
 )
 
-func Insert(user model.User) error {
-  //verify if user isnt repet
+func Insert(user model.User) (int64, error) {
   pg := db.GetConn()
 
-  r, err := pg.Exec("INSERT INTO users (name, crumps) VALUES ($1, $2)", user.Name, user.Crumps)
+  result, err := pg.Exec("INSERT INTO users (email, name) VALUES ($1, $2)", user.Email , user.Name)
   if err != nil {
-    fmt.Println(err)
+    return 0, err
   }
 
-  fmt.Println("retorno da query: ", r)
+  rows, err := result.LastInsertId()
+  if err != nil {
+    return 0, err
+  }
 
-	return err
+	return rows, nil
 }

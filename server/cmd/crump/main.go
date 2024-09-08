@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-  if err := db.OpenConn(); err != nil {
+  if err := db.MustOpenConn(); err != nil {
     panic(err)
   }
 
