@@ -1,3 +1,4 @@
+import { Input } from "../components/ui/input/input"
 import { LogoTitle } from "../components/ui/logo/logo-title"
 
 export function Up() {
@@ -9,18 +10,35 @@ export function Up() {
           <h2 className="text-xl font-bold">Create your account!</h2>
 
           <form className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1">
-              <label htmlFor="name" className="text-sm">Name</label>
-              <input type="text" placeholder="Create a name" id="name"
-                className="p-2 bg-prim-700 text-sm rounded-md border border-input-border
-                  outline-none placeholder-text-100 placeholder-opacity-60"
-              />
-            </div>
+            <Input
+              type="text"
+              name="name"
+              ph="Create your name"
+            />
+
+            <Input
+              type="email"
+              name="email"
+              ph="Enter your email"
+            />
+
+            <Input
+              type="password"
+              name="password"
+              ph="Enter your password"
+            />
+
+            <Input
+              type="password"
+              name="confirm-password"
+              ph="Confirm your passowrd"
+            />
 
             <input type="submit" value="Create"
-              className="p-2 bg-success-400 rounded-md text-prim-900 font-semibold"
+              className="p-2 bg-success-400 rounded-md text-prim-900 font-semibold cursor-pointer"
             />
           </form>
+
           <p className="text-prim-400">
             Already have an account?
             <a href="#" target="_self" className="text-text-100 font-semibold"> Signin</a>
