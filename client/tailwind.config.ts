@@ -5,7 +5,11 @@ export default {
   theme: {
     colors: {
       "prim-900": "#201C26",
-      "text-100": "#FBEED3"
+      "prim-700": "#3B2F42",
+      "prim-400": "#644B6C",
+      "text-100": "#FBEED3",
+      "success-400": "#5B9F66",
+      "input-border": "#5E5765"
     },
     extend: {},
   },
