@@ -1,4 +1,5 @@
 import { Input } from "../components/ui/input/input"
+import { Submit } from "../components/ui/input/submit"
 import { LogoTitle } from "../components/ui/logo/logo-title"
 
 export function Up() {
@@ -34,14 +35,12 @@ export function Up() {
               ph="Confirm your passowrd"
             />
 
-            <input type="submit" value="Create"
-              className="p-2 bg-success-400 rounded-md text-prim-900 font-semibold cursor-pointer"
-            />
+            <Submit val="Create" />
           </form>
 
           <p className="text-prim-400">
             Already have an account?
-            <a href="#" target="_self" className="text-text-100 font-semibold"> Signin</a>
+            <a href="in" target="_self" className="text-text-100 font-semibold"> Signin</a>
           </p>
         </main>
       </div>
