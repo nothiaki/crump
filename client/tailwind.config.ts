@@ -5,6 +5,7 @@ export default {
   theme: {
     colors: {
       "prim-900": "#201C26",
+      "prim-800": "#2E2534",
       "prim-700": "#3B2F42",
       "prim-400": "#644B6C",
       "text-100": "#FBEED3",
