@@ -51,12 +51,12 @@ func SelectById(id string) (*model.User, error){
   return &user, nil
 }
 
-func ExistsByEmail(email string) (bool, error){
+func ExistsByNameOrEmail(name string, email string) (bool, error){
   pg := db.GetConn()
 
   var exists bool
 
-  if err := pg.QueryRow("SELECT * FROM users WHERE email = $1", email).Scan(&exists); err != nil {
+  if err := pg.QueryRow("SELECT * FROM users WHERE name = $1 OR email = $2", name, email).Scan(&exists); err != nil {
     return false, err
   }
 

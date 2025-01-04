@@ -8,7 +8,11 @@ import (
 func Insert(user model.User) (int64, error) {
   pg := db.GetConn()
 
-  result, err := pg.Exec("INSERT INTO users (email, name) VALUES ($1, $2)", user.Email , user.Name)
+  result, err := pg.Exec("INSERT INTO users (email, name, password, salt) VALUES ($1, $2, $3, $4)",
+    user.Email,
+    user.Name,
+    user.Password,
+    user.Salt)
   if err != nil {
     return 0, err
   }
