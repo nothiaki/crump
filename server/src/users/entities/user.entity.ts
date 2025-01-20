@@ -1,8 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class UserEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
@@ -11,7 +16,7 @@ export class UserEntity {
   @Column()
   name: string;
 
-  @Column()
+  @Column('integer', { default: 0 })
   crumps: number;
 
   @Column()
@@ -20,10 +25,10 @@ export class UserEntity {
   @Column()
   salt: string;
 
-  @Column()
-  role: string;
+  //@Column()
+  //role: string;
 
-  @Column()
+  @CreateDateColumn()
   createdAt: string;
 
   @Column({ default: true })
