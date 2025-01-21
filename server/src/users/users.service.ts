@@ -8,17 +8,11 @@ import { Repository } from 'typeorm';
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
-    private readonly usersRepository: Repository<UserEntity>
+    private readonly usersRepository: Repository<UserEntity>,
   ) {}
 
   findOne(id: string) {
-    return {
-      id,
-      email: 'jhon@mail.com',
-      name: 'jhon',
-      crumps: 301,
-      createdAt: '2025-01-19 14:30:15.123456+00',
-    };
+    return this.usersRepository.findOneBy({ id });
   }
 
   async create(createUserDto: RequestUserDto) {
@@ -26,12 +20,12 @@ export class UsersService {
       where: { email: createUserDto.email },
     });
 
-    if(existingUser) {
+    if (existingUser) {
       throw new HttpException('user already exists', HttpStatus.BAD_REQUEST);
-    };
+    }
 
     const newUser = this.usersRepository.create(createUserDto);
-    newUser.salt = "testYet";
+    newUser.salt = 'testYet';
 
     return await this.usersRepository.save(newUser);
   }
