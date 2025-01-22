@@ -11,6 +11,14 @@ export class UsersService {
     private readonly usersRepository: Repository<UserEntity>,
   ) {}
 
+  find() {
+    return this.usersRepository.find({
+      where: {
+        isActive: true,
+      },
+    });
+  }
+
   findOne(id: string) {
     return this.usersRepository.findOneBy({ id });
   }

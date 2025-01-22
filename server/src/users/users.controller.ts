@@ -7,6 +7,17 @@ import { ResponseUserDto } from './dto/response-user.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get()
+  async find() {
+    const users = await this.usersService.find();
+
+    const usersFiltered = users.map((user) => {
+      return new ResponseUserDto(user);
+    });
+
+    return usersFiltered;
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const user = await this.usersService.findOne(id);
