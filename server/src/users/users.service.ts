@@ -3,6 +3,7 @@ import { RequestUserDto } from './dto/request-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { IsUUID } from 'class-validator';
 
 @Injectable()
 export class UsersService {
@@ -20,21 +21,42 @@ export class UsersService {
   }
 
   findOne(id: string) {
-    return this.usersRepository.findOneBy({ id });
+    try {
+      return this.usersRepository.findOneBy({ id });
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async create(createUserDto: RequestUserDto) {
-    const existingUser = await this.usersRepository.findOne({
-      where: { email: createUserDto.email },
-    });
+    try {
+      const existingEmail = await this.usersRepository.findOne({
+        where: {
+          email: createUserDto.email,
+        },
+      });
 
-    if (existingUser) {
-      throw new HttpException('user already exists', HttpStatus.BAD_REQUEST);
+      if (existingEmail) {
+        throw new HttpException('email already exists', HttpStatus.BAD_REQUEST);
+      }
+
+      const existingName = await this.usersRepository.findOne({
+        where: {
+          name: createUserDto.name,
+        },
+      });
+      //i should transform this two queris in one
+
+      if (existingName) {
+        throw new HttpException('name already exists', HttpStatus.BAD_REQUEST);
+      }
+
+      const newUser = this.usersRepository.create(createUserDto);
+      newUser.salt = 'testYet';
+
+      return await this.usersRepository.save(newUser);
+    } catch (error) {
+      throw new Error(error);
     }
-
-    const newUser = this.usersRepository.create(createUserDto);
-    newUser.salt = 'testYet';
-
-    return await this.usersRepository.save(newUser);
   }
 }

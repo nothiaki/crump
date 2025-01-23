@@ -5,7 +5,7 @@ export class ResponseUserDto {
   email: string;
   name: string;
   crumps: number;
-  createdAt: string;
+  createdAt: Date;
 
   constructor(user: Partial<UserEntity>) {
     this.id = user.id;

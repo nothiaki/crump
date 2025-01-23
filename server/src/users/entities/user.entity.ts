@@ -10,10 +10,10 @@ export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @Column('integer', { default: 0 })
@@ -29,7 +29,7 @@ export class UserEntity {
   //role: string;
 
   @CreateDateColumn()
-  createdAt: string;
+  createdAt: Date;
 
   @Column({ default: true })
   isActive: boolean;
