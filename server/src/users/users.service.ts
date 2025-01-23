@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { RequestUserDto } from './dto/request-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { IsUUID } from 'class-validator';
+import { QueryIdUserDto } from './dto/query-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -13,22 +13,26 @@ export class UsersService {
   ) {}
 
   find() {
-    return this.usersRepository.find({
-      where: {
-        isActive: true,
-      },
-    });
-  }
-
-  findOne(id: string) {
     try {
-      return this.usersRepository.findOneBy({ id });
+      return this.usersRepository.find({
+        where: {
+          isActive: true,
+        },
+      });     
     } catch (error) {
       throw new Error(error);
     }
   }
 
-  async create(createUserDto: RequestUserDto) {
+  findOne(queryIdUserDto: QueryIdUserDto) {
+    try {
+      return this.usersRepository.findOneBy({ id: queryIdUserDto.id });
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async create(createUserDto: CreateUserDto) {
     try {
       const existingEmail = await this.usersRepository.findOne({
         where: {

@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { RequestUserDto } from './dto/request-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { ResponseUserDto } from './dto/response-user.dto';
+import { QueryIdUserDto } from './dto/query-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -19,13 +20,13 @@ export class UsersController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const user = await this.usersService.findOne(id);
+  async findOne(@Param() queryIdUserDto: QueryIdUserDto) {
+    const user = await this.usersService.findOne(queryIdUserDto);
     return new ResponseUserDto(user);
   }
 
   @Post()
-  async create(@Body() createUserDto: RequestUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     const user = await this.usersService.create(createUserDto);
     return new ResponseUserDto(user);
   }
