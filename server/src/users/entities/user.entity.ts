@@ -22,8 +22,8 @@ export class UserEntity {
   @Column()
   password: string;
 
-  @Column()
-  salt: string;
+  //@Column()
+  //salt: string;
 
   //@Column()
   //role: string;

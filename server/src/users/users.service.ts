@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { QueryIdUserDto } from './dto/query-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -41,7 +42,7 @@ export class UsersService {
       });
 
       if (existingEmail) {
-        throw new HttpException('email already exists', HttpStatus.BAD_REQUEST);
+        throw new HttpException('email already exists', HttpStatus.CONFLICT);
       }
 
       const existingName = await this.usersRepository.findOne({
@@ -52,11 +53,12 @@ export class UsersService {
       //i should transform this two queris in one
 
       if (existingName) {
-        throw new HttpException('name already exists', HttpStatus.BAD_REQUEST);
+        throw new HttpException('name already exists', HttpStatus.CONFLICT);
       }
 
       const newUser = this.usersRepository.create(createUserDto);
-      newUser.salt = 'testYet';
+
+      newUser.password = await bcrypt.hashSync(createUserDto.password, 12);
 
       return await this.usersRepository.save(newUser);
     } catch (error) {
