@@ -34,4 +34,14 @@ export class CrumpsService {
 
     return await this.crumpsRepository.save(newCrump);
   }
+
+  async remove(id: number) {
+    const crump  = await this.crumpsRepository.findOneBy({ id });
+
+    if (!crump) {
+      throw new HttpException('crump not exists', HttpStatus.NOT_FOUND);
+    }
+    
+    await this.crumpsRepository.remove(crump);
+  }
 }
