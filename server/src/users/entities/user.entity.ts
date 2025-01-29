@@ -1,8 +1,10 @@
+import { CrumpEntity } from 'src/crumps/entities/crump.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
@@ -17,7 +19,7 @@ export class UserEntity {
   name: string;
 
   @Column('integer', { default: 0 })
-  crumps: number;
+  totalCrumps: number;
 
   @Column()
   password: string;
@@ -33,4 +35,7 @@ export class UserEntity {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @OneToMany(() => CrumpEntity, (crump: CrumpEntity) => crump.id)
+  crumps: CrumpEntity[];
 }
