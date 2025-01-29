@@ -56,6 +56,6 @@ export class UsersService {
 
     newUser.password = await bcrypt.hashSync(createUserDto.password, 12);
 
-    return await this.usersRepository.save(newUser);
+    return this.usersRepository.save(newUser);
   }
 }

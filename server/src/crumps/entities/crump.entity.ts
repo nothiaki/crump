@@ -18,7 +18,7 @@ export class CrumpEntity {
   @Column()
   content: string;
 
-  @Column()
+  @Column('integer', { default: 0 })
   uncrumps: number;
 
   @CreateDateColumn()
