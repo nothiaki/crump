@@ -8,8 +8,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async find() {
-    const users = await this.usersService.find();
+  async findAll() {
+    const users = await this.usersService.findAll();
 
     const usersFiltered = users.map((user) => {
       return new ResponseUserDto(user);

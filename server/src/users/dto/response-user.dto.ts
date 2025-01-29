@@ -4,14 +4,14 @@ export class ResponseUserDto {
   id: string;
   email: string;
   name: string;
-  crumps: number;
+  totalCrumps: number;
   createdAt: Date;
 
   constructor(user: Partial<UserEntity>) {
     this.id = user.id;
     this.email = user.email;
     this.name = user.name;
-    this.crumps = user.crumps;
+    this.totalCrumps = user.totalCrumps;
     this.createdAt = user.createdAt;
   }
 }

@@ -12,7 +12,7 @@ export class UsersService {
     private readonly usersRepository: Repository<UserEntity>,
   ) {}
 
-  find() {
+  findAll() {
     return this.usersRepository.find({
       where: {
         isActive: true,
