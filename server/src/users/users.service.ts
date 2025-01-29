@@ -58,4 +58,17 @@ export class UsersService {
 
     return this.usersRepository.save(newUser);
   }
+
+  async remove(id: string) {
+    const user = await this.usersRepository.preload({
+      id,
+      isActive: false,
+    });
+
+    if (!user) {
+      throw new HttpException('user not exists', HttpStatus.NOT_FOUND);
+    }
+
+    await this.usersRepository.save(user);
+  }
 }
