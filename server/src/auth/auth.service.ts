@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +15,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async in(createAuthDto: CreateAuthDto) {
+  async in(createAuthDto: CreateAuthDto, res: Response) {
     const user = await this.usersRepository.findOneBy({
       name: createAuthDto.name
     });
@@ -29,9 +30,18 @@ export class AuthService {
       throw new HttpException('user or password are incorrects', HttpStatus.BAD_REQUEST);
     }
 
-    await this.jwtService.signAsync({
+    const token = await this.jwtService.signAsync({
       sub: user.id,
       name: createAuthDto.name
     });
+
+    res.cookie('token', token,
+      {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 8, //8 hours
+        sameSite: 'strict',
+      });
+    
+    return res.status(HttpStatus.OK).send();
   }
 }
