@@ -13,11 +13,11 @@ import { JwtModule } from '@nestjs/jwt';
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.HOST ?? 'localhost',
-      port: 5432,
+      host: process.env.DB_HOST ?? 'localhost',
+      port: parseInt(process.env.DB_PORT) ?? 5432,
       username: 'postgres',
-      password: process.env.PASSWORD ?? '',
-      database: process.env.DATABASE ?? 'crump',
+      password: process.env.DB_PASSWORD ?? '',
+      database: process.env.DB_NAME ?? 'crump',
       entities: [],
       synchronize: true, //just for dev environment
       autoLoadEntities: true,
