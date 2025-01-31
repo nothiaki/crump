@@ -5,6 +5,8 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CrumpsModule } from './crumps/crumps.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -20,8 +22,14 @@ import { ConfigModule } from '@nestjs/config';
       synchronize: true, //just for dev environment
       autoLoadEntities: true,
     }),
+    JwtModule.register({
+      global: true,
+      secret: 'ABCDE',
+      signOptions: { expiresIn: '8h' },
+    }),
     UsersModule,
     CrumpsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
