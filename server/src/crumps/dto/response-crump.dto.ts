@@ -1,4 +1,4 @@
-import { CrumpEntity } from "../entities/crump.entity";
+import { CrumpEntity } from '../entities/crump.entity';
 
 export class ResponseCrumpDto {
   content: string;
@@ -6,7 +6,7 @@ export class ResponseCrumpDto {
   uncrumps: number;
   createdAt: Date;
   from: {
-    email: string,
+    email: string;
     name: string;
   };
 
@@ -17,7 +17,7 @@ export class ResponseCrumpDto {
     this.createdAt = crump.createdAt;
     this.from = {
       email: crump.from.email,
-      name: crump.from.name
+      name: crump.from.name,
     };
   }
 }

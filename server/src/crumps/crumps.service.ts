@@ -15,7 +15,7 @@ export class CrumpsService {
   ) {}
 
   findAll() {
-    return this.crumpsRepository.find();     
+    return this.crumpsRepository.find();
   }
 
   async create(createCrumpDto: CreateCrumpDto) {
@@ -36,12 +36,12 @@ export class CrumpsService {
   }
 
   async remove(id: number) {
-    const crump  = await this.crumpsRepository.findOneBy({ id });
+    const crump = await this.crumpsRepository.findOneBy({ id });
 
     if (!crump) {
       throw new HttpException('crump not exists', HttpStatus.NOT_FOUND);
     }
-    
+
     await this.crumpsRepository.remove(crump);
   }
 }

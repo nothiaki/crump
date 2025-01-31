@@ -17,7 +17,7 @@ export class UsersService {
       where: {
         isActive: true,
       },
-    });     
+    });
   }
 
   async findOne(id: string) {
