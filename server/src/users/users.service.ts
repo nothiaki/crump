@@ -46,7 +46,7 @@ export class UsersService {
         name: createUserDto.name,
       },
     });
-    //i should transform this two queris in one
+    //i should transform this two querys in one
 
     if (existingName) {
       throw new HttpException('name already exists', HttpStatus.CONFLICT);

@@ -1,6 +1,6 @@
-import { Input } from "../components/ui/input/input"
-import { Submit } from "../components/ui/input/submit"
-import { LogoTitle } from "../components/ui/logo/logo-title"
+import { Input } from "../components/input/input"
+import { Submit } from "../components/input/submit"
+import { LogoTitle } from "../components/logo/logo-title"
 
 export function In() {
   return (
