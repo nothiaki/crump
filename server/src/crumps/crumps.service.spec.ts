@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { CreateCrumpDto } from './dto/create-crump.dto';
+import { HttpException } from '@nestjs/common';
 
 describe('CrumpsService', () => {
   let crumpsService: CrumpsService;
@@ -65,6 +66,20 @@ describe('CrumpsService', () => {
       expect(crumpsRepository.create).toHaveBeenCalled();
       expect(crumpsRepository.save).toHaveBeenCalled();
     });
+
+    it('should return not found user', async () => {
+      const createCrumpDto: CreateCrumpDto = {
+        content: 'test',
+        from: 'tester',
+      };
+
+      jest.spyOn(usersRepository, 'findOneBy').mockResolvedValue(null);
+
+      await expect(crumpsService.create(createCrumpDto)).rejects.toThrow(HttpException);
+      expect(usersRepository.findOneBy).toHaveBeenCalledWith({
+        name: createCrumpDto.from,
+      });
+    });
   });
 
   describe('Delete one crump', () => {
@@ -82,6 +97,15 @@ describe('CrumpsService', () => {
 
       expect(crumpsRepository.findOneBy).toHaveBeenCalled();
       expect(crumpsRepository.remove).toHaveBeenCalled();
+    });
+
+    it('should return not found crump', async () => {
+      const id: number = 0;
+
+      jest.spyOn(crumpsRepository, 'findOneBy').mockResolvedValue(null);
+
+      await expect(crumpsService.remove(id)).rejects.toThrow(HttpException);
+      expect(crumpsRepository.findOneBy).toHaveBeenCalledWith({ id });
     });
   });
 });
