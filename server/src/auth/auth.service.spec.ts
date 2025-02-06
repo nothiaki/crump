@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { Response } from 'express';
 import * as bcrypt from 'bcrypt';
+import { HttpException } from '@nestjs/common';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -66,6 +67,35 @@ describe('AuthService', () => {
       expect(res.cookie).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalled();
       expect(res.send).toHaveBeenCalled();
+    });
+
+    it('should return user or password are incorrects', async () => {
+      const createUserDto: CreateAuthDto = {
+        name: 'test',
+        password: 'testTEST',
+      };
+
+      const res: any  = {};
+
+      jest.spyOn(usersRepository, 'findOneBy').mockResolvedValue(null);
+
+      await expect(authService.in(createUserDto, res as Response)).rejects.toThrow(HttpException);
+
+      expect(usersRepository.findOneBy).toHaveBeenCalled();
+    });
+
+    it('should return password incorrect', async () => {
+      const createAuthDto: CreateAuthDto = {
+        name: 'test',
+        password: 'testTEST',
+      };
+
+      const res: any  = {};
+
+      jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
+
+      await expect(authService.in(createAuthDto, res as Response))
+        .rejects.toThrow(HttpException);
     });
   });
 });
