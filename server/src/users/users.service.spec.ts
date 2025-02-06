@@ -4,6 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
+import { HttpException } from '@nestjs/common';
 
 describe('UsersService', () => {
   let usersService: UsersService;
@@ -55,6 +56,15 @@ describe('UsersService', () => {
       expect(usersRepository.findOneBy).toHaveBeenCalledWith({ id });
       expect(response).toBe(mockUserPartial);
     });
+
+    it('should return not found user', async () => {
+      const id: string = 'cd674539-4a10-42af-b658-2da0a710dc8a';
+
+      jest.spyOn(usersRepository, 'findOneBy').mockResolvedValue(null);
+
+      await expect(usersService.findOne(id)).rejects.toThrow(HttpException);
+      expect(usersRepository.findOneBy).toHaveBeenCalledWith({ id });
+    });
   });
   
   describe('Create user', () => {
@@ -71,6 +81,40 @@ describe('UsersService', () => {
       expect(usersRepository.create).toHaveBeenCalledWith(createUserDto);
       expect(usersRepository.save).toHaveBeenCalled();
     });
+
+    it('should return email already exist', async () => {
+      const createUserDto: CreateUserDto = {
+        name: 'test',
+        email: 'test@test.test',
+        password: 'testTEST',
+      };
+
+      jest.spyOn(usersRepository, 'findOne').mockResolvedValue({
+        id: 'd813d58b-4b2d-4ce8-8d89-bb90acc1d6d7',
+        email: 'test@test.test',
+      } as UserEntity);
+
+      await expect(usersService.create(createUserDto)).rejects.toThrow(HttpException);
+      expect(usersRepository.findOne).toHaveBeenCalled();
+    });
+
+    it('should return name already exist', async () => {
+      const createUserDto: CreateUserDto = {
+        name: 'test',
+        email: 'test@test.test',
+        password: 'testTEST',
+      };
+
+      jest.spyOn(usersRepository, 'findOne')
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce({
+        id: 'd813d58b-4b2d-4ce8-8d89-bb90acc1d6d7',
+        name: 'test',
+      } as UserEntity);
+
+      await expect(usersService.create(createUserDto)).rejects.toThrow(HttpException);
+      expect(usersRepository.findOne).toHaveBeenCalled();
+    });
   });
   
   describe('Delete one user', () => {
@@ -79,6 +123,15 @@ describe('UsersService', () => {
 
       expect(usersRepository.preload).toHaveBeenCalled();
       expect(usersRepository.save).toHaveBeenCalled();
+    });
+
+    it('should return not found user', async () => {
+      const id: string = 'cd674539-4a10-42af-b658-2da0a710dc8a';
+
+      jest.spyOn(usersRepository, 'preload').mockResolvedValue(null);
+
+      await expect(usersService.remove(id)).rejects.toThrow(HttpException);
+      expect(usersRepository.preload).toHaveBeenCalledWith({ id, isActive: false, });
     });
   });
 });
