@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Input } from "../components/input/input"
 import { Submit } from "../components/input/submit"
 import { LogoTitle } from "../components/logo/logo-title"
-import { createUser } from "../api/users"
+import { usersService } from "../services/users"
 
 export function Up() {
-
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,10 +13,9 @@ export function Up() {
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("Changing:", e.target.name, "to", e.target.value)
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     })
   }
 
@@ -27,7 +25,7 @@ export function Up() {
     if (validateForm()) {
       const { confirmPassword, ...data } = formData
       try {        
-        createUser(data)
+        usersService.create(data)
         alert('Account created successfully!')
       } catch (error) {
         console.error(error)
