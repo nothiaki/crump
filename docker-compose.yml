@@ -19,6 +19,7 @@ services:
     restart: always
     depends_on:
       - postgres
+      - redis
     volumes:
       - ./server:/server
     networks:
@@ -38,6 +39,16 @@ services:
     networks:
       - dev
 
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    restart: always
+    volumes:
+      - redis_data:/data
+    networks:
+      - dev
+
 networks:
 
   dev:
@@ -46,3 +57,4 @@ networks:
 volumes:
 
   postgres_data:
+  redis_data:

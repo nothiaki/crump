@@ -7,6 +7,8 @@ import { CrumpsModule } from './crumps/crumps.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
   imports: [
@@ -26,6 +28,13 @@ import { JwtModule } from '@nestjs/jwt';
       global: true,
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '8h' },
+    }),
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 30000, //ms
+      store: redisStore,
+      host: process.env.REDIS_HOST,
+      port: parseInt(process.env.REDIS_PORT),
     }),
     UsersModule,
     CrumpsModule,
