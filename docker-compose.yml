@@ -1,0 +1,38 @@
+services:
+
+  client:
+    build: ./client
+    container_name: client
+    ports:
+      - 5173:5173
+    restart: always
+    networks:
+      - dev
+
+  server:
+    build: ./server
+    container_name: server
+    ports:
+      - 3000:3000
+    restart: always
+    depends_on:
+      - postgres
+    networks:
+      - dev
+
+  postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db
+    networks:
+      - dev
+
+networks:
+
+  dev:
+    driver: bridge
