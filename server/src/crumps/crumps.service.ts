@@ -4,6 +4,7 @@ import { CrumpEntity } from './entities/crump.entity';
 import { Repository } from 'typeorm';
 import { CreateCrumpDto } from './dto/create-crump.dto';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class CrumpsService {
@@ -14,8 +15,13 @@ export class CrumpsService {
     private readonly usersRepository: Repository<UserEntity>,
   ) {}
 
-  findAll() {
-    return this.crumpsRepository.find();
+  findAll(paginationDto: PaginationDto) {
+    const { limit = 10, offset = 0 } = paginationDto;
+
+    return this.crumpsRepository.find({
+      take: limit,
+      skip: offset,
+    });
   }
 
   async create(createCrumpDto: CreateCrumpDto) {

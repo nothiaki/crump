@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { CacheModule } from '@nestjs/cache-manager';
 
 describe('UsersController', () => {
   let usersController: UsersController;
@@ -9,6 +11,7 @@ describe('UsersController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [CacheModule.register()],
       controllers: [UsersController],
       providers: [
         {
@@ -28,8 +31,14 @@ describe('UsersController', () => {
   });
 
   it('findAll', async () => {
-    await usersController.findAll();
-    expect(usersService.findAll).toHaveBeenCalled();
+    const paginationDto: PaginationDto = {
+      limit: 1,
+      offset: 1,
+    };
+
+    await usersController.findAll(paginationDto);
+
+    expect(usersService.findAll).toHaveBeenCalledWith(paginationDto);
   });
 
   it('findOne', async () => {

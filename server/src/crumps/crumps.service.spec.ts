@@ -6,6 +6,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { CreateCrumpDto } from './dto/create-crump.dto';
 import { HttpException } from '@nestjs/common';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 describe('CrumpsService', () => {
   let crumpsService: CrumpsService;
@@ -42,9 +43,17 @@ describe('CrumpsService', () => {
 
   describe('Find all crumps', () => {
     it('should find all crumps', async () => {
-      await crumpsService.findAll();
+      const paginationDto: PaginationDto = {
+        limit: 1,
+        offset: 1,
+      };
 
-      expect(crumpsRepository.find).toHaveBeenCalled();
+      await crumpsService.findAll(paginationDto);
+
+      expect(crumpsRepository.find).toHaveBeenCalledWith({
+        take: 1,
+        skip: 1,
+      });
     });
   });
 

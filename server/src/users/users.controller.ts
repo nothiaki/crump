@@ -6,12 +6,14 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
   UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ResponseUserDto } from './dto/response-user.dto';
 import { CacheInterceptor } from '@nestjs/cache-manager';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('users')
 export class UsersController {
@@ -19,8 +21,8 @@ export class UsersController {
 
   @UseInterceptors(CacheInterceptor)
   @Get()
-  async findAll() {
-    const users = await this.usersService.findAll();
+  async findAll(@Query() paginationDto: PaginationDto) {
+    const users = await this.usersService.findAll(paginationDto);
 
     const usersFiltered = users.map((user) => {
       return new ResponseUserDto(user);

@@ -5,6 +5,7 @@ import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { HttpException } from '@nestjs/common';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 describe('UsersService', () => {
   let usersService: UsersService;
@@ -34,9 +35,20 @@ describe('UsersService', () => {
   
   describe('Find all users', () => {
     it('should find all users', async () => {
-      await usersService.findAll();
+      const paginationDto: PaginationDto = {
+        limit: 1,
+        offset: 1
+      };
 
-      expect(usersRepository.find).toHaveBeenCalled();
+      await usersService.findAll(paginationDto);
+
+      expect(usersRepository.find).toHaveBeenCalledWith({
+        where: {
+          isActive: true,
+        },
+        take: 1,
+        skip: 1,
+      });
     });
   });
   
