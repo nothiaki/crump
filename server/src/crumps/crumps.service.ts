@@ -1,18 +1,17 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CrumpEntity } from './entities/crump.entity';
 import { Repository } from 'typeorm';
 import { CreateCrumpDto } from './dto/create-crump.dto';
-import { UserEntity } from 'src/users/entities/user.entity';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class CrumpsService {
   constructor(
     @InjectRepository(CrumpEntity)
     private readonly crumpsRepository: Repository<CrumpEntity>,
-    @InjectRepository(UserEntity)
-    private readonly usersRepository: Repository<UserEntity>,
+    private readonly usersService: UsersService,
   ) {}
 
   findAll(paginationDto: PaginationDto) {
@@ -25,9 +24,7 @@ export class CrumpsService {
   }
 
   async create(createCrumpDto: CreateCrumpDto) {
-    const user = await this.usersRepository.findOneBy({
-      name: createCrumpDto.from,
-    });
+    const user = await this.usersService.findOneByName(createCrumpDto.from);
 
     if (!user) {
       throw new HttpException('user not exists', HttpStatus.NOT_FOUND);

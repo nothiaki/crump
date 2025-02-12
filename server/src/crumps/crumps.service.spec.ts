@@ -7,11 +7,12 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { CreateCrumpDto } from './dto/create-crump.dto';
 import { HttpException } from '@nestjs/common';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { UsersService } from 'src/users/users.service';
 
 describe('CrumpsService', () => {
   let crumpsService: CrumpsService;
   let crumpsRepository: Repository<CrumpEntity>;
-  let usersRepository: Repository<UserEntity>;
+  let usersService: UsersService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -28,9 +29,9 @@ describe('CrumpsService', () => {
           },
         },
         {
-          provide: getRepositoryToken(UserEntity),
+          provide: UsersService,
           useValue: {
-            findOneBy: jest.fn(),
+            findOneByName: jest.fn(),
           },
         },
       ],
@@ -38,7 +39,7 @@ describe('CrumpsService', () => {
 
     crumpsService = module.get<CrumpsService>(CrumpsService);
     crumpsRepository = module.get<Repository<CrumpEntity>>(getRepositoryToken(CrumpEntity));
-    usersRepository = module.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
+    usersService = module.get<UsersService>(UsersService);
   });
 
   describe('Find all crumps', () => {
@@ -64,14 +65,14 @@ describe('CrumpsService', () => {
         from: 'tester',
       };
 
-      jest.spyOn(usersRepository, 'findOneBy').mockResolvedValue({
+      jest.spyOn(usersService, 'findOneByName').mockResolvedValue({
         id: '62899595-1fd2-480a-9963-bed113857a96',
         name: 'tester'
       } as UserEntity);
 
       await crumpsService.create(createCrumpDto);
 
-      expect(usersRepository.findOneBy).toHaveBeenCalled();
+      expect(usersService.findOneByName).toHaveBeenCalled();
       expect(crumpsRepository.create).toHaveBeenCalled();
       expect(crumpsRepository.save).toHaveBeenCalled();
     });
@@ -82,12 +83,10 @@ describe('CrumpsService', () => {
         from: 'tester',
       };
 
-      jest.spyOn(usersRepository, 'findOneBy').mockResolvedValue(null);
+      jest.spyOn(usersService, 'findOneByName').mockResolvedValue(null);
 
       await expect(crumpsService.create(createCrumpDto)).rejects.toThrow(HttpException);
-      expect(usersRepository.findOneBy).toHaveBeenCalledWith({
-        name: createCrumpDto.from,
-      });
+      expect(usersService.findOneByName).toHaveBeenCalledWith(createCrumpDto.from);
     });
   });
 

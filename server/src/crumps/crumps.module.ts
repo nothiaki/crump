@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
 import { CrumpsService } from './crumps.service';
 import { CrumpsController } from './crumps.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { CrumpEntity } from './entities/crump.entity';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CrumpEntity, UserEntity])],
+  imports: [UsersModule],
   controllers: [CrumpsController],
   providers: [CrumpsService],
 })
