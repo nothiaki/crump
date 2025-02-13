@@ -4,6 +4,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { CacheModule } from '@nestjs/cache-manager';
+import { JwtService } from '@nestjs/jwt';
 
 describe('UsersController', () => {
   let usersController: UsersController;
@@ -23,6 +24,7 @@ describe('UsersController', () => {
             remove: jest.fn(),
           },
         },
+        JwtService,//from AuthGuard
       ],
     }).compile();
 

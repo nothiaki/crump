@@ -28,7 +28,7 @@ import * as redisStore from 'cache-manager-redis-store';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '8h' },
+      signOptions: { expiresIn: '1h' },
     }),
     CacheModule.register({
       isGlobal: true,
