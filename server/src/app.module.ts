@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { CacheModule } from '@nestjs/cache-manager';
+import { InModule } from './in/in.module';
 import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
@@ -39,6 +40,7 @@ import * as redisStore from 'cache-manager-redis-store';
     UsersModule,
     CrumpsModule,
     AuthModule,
+    InModule,
   ],
   controllers: [AppController],
   providers: [AppService],
