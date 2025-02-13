@@ -10,7 +10,7 @@ export class InService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-    private readonly bcryptHashService: HashServiceAbstract,
+    private readonly hashService: HashServiceAbstract,
   ) {}
 
   async in(createInDto: CreateInDto, res: Response) {
@@ -20,7 +20,7 @@ export class InService {
       throw new HttpException('user or password are incorrects', HttpStatus.BAD_REQUEST);
     }
 
-    const isValidPassword = await this.bcryptHashService.compare(createInDto.password, user.password);
+    const isValidPassword = await this.hashService.compare(createInDto.password, user.password);
 
     if (!isValidPassword) {
       throw new HttpException('user or password are incorrects', HttpStatus.BAD_REQUEST);

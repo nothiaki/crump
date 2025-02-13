@@ -12,7 +12,7 @@ describe('InService', () => {
   let inService: InService;
   let usersService: UsersService;
   let jwtService: JwtService;
-  let bcryptHashService: HashServiceAbstract;
+  let hashService: HashServiceAbstract;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -42,7 +42,7 @@ describe('InService', () => {
     inService = module.get<InService>(InService);
     usersService = module.get<UsersService>(UsersService);
     jwtService = module.get<JwtService>(JwtService);
-    bcryptHashService = module.get<HashServiceAbstract>(HashServiceAbstract);
+    hashService = module.get<HashServiceAbstract>(HashServiceAbstract);
   });
 
   describe('Login user', () => {
@@ -65,7 +65,7 @@ describe('InService', () => {
       };
 
       jest.spyOn(usersService, 'findOneByName').mockResolvedValue(mockUserPartial as UserEntity);
-      jest.spyOn(bcryptHashService, 'compare').mockResolvedValue(true);
+      jest.spyOn(hashService, 'compare').mockResolvedValue(true);
 
       await inService.in(createInDto, res as Response);
 
@@ -99,7 +99,7 @@ describe('InService', () => {
 
       const res: any  = {};
 
-      jest.spyOn(bcryptHashService, 'compare').mockResolvedValue(false);
+      jest.spyOn(hashService, 'compare').mockResolvedValue(false);
 
       await expect(inService.in(createInDto, res as Response))
         .rejects.toThrow(HttpException);

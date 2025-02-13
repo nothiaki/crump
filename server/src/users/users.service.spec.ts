@@ -11,7 +11,7 @@ import { HashServiceAbstract } from 'src/auth/hash/hash.service.abstract';
 describe('UsersService', () => {
   let usersService: UsersService;
   let usersRepository: Repository<UserEntity>;
-  let bcryptHashService: HashServiceAbstract;
+  let hashService: HashServiceAbstract;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -39,7 +39,7 @@ describe('UsersService', () => {
 
     usersService = module.get<UsersService>(UsersService);
     usersRepository = module.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
-    bcryptHashService = module.get<HashServiceAbstract>(HashServiceAbstract);
+    hashService = module.get<HashServiceAbstract>(HashServiceAbstract);
   });
   
   describe('Find all users', () => {
@@ -96,13 +96,13 @@ describe('UsersService', () => {
         password: 'testTEST',
       };
 
-      jest.spyOn(bcryptHashService, 'hash').mockReturnValue('feauf');
+      jest.spyOn(hashService, 'hash').mockReturnValue('feauf');
 
       await usersService.create(createUserDto);
 
       expect(usersRepository.findOne).toHaveBeenCalledTimes(2);
       expect(usersRepository.create).toHaveBeenCalledWith(createUserDto);
-      expect(bcryptHashService.hash).toHaveBeenCalledWith(createUserDto.password);
+      expect(hashService.hash).toHaveBeenCalledWith(createUserDto.password);
       expect(usersRepository.save).toHaveBeenCalled();
     });
 

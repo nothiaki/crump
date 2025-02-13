@@ -11,7 +11,7 @@ export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
-    private readonly bcryptHashService: HashServiceAbstract,
+    private readonly hashService: HashServiceAbstract,
   ) {}
 
   findAll(paginationDto: PaginationDto) {
@@ -70,7 +70,7 @@ export class UsersService {
 
     const newUser = this.usersRepository.create(createUserDto);
 
-    newUser.password = this.bcryptHashService.hash(createUserDto.password);
+    newUser.password = this.hashService.hash(createUserDto.password);
 
     return this.usersRepository.save(newUser);
   }
