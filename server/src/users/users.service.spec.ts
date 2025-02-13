@@ -6,10 +6,12 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { HttpException } from '@nestjs/common';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { HashServiceAbstract } from 'src/auth/hash/hash.service.abstract';
 
 describe('UsersService', () => {
   let usersService: UsersService;
   let usersRepository: Repository<UserEntity>;
+  let bcryptHashService: HashServiceAbstract;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -25,12 +27,19 @@ describe('UsersService', () => {
             save: jest.fn(),
             preload: jest.fn().mockResolvedValue(UserEntity),
           },
-        }
+        },
+        {
+          provide: HashServiceAbstract,
+          useValue: {
+            hash: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     usersService = module.get<UsersService>(UsersService);
     usersRepository = module.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
+    bcryptHashService = module.get<HashServiceAbstract>(HashServiceAbstract);
   });
   
   describe('Find all users', () => {
@@ -87,10 +96,13 @@ describe('UsersService', () => {
         password: 'testTEST',
       };
 
+      jest.spyOn(bcryptHashService, 'hash').mockReturnValue('feauf');
+
       await usersService.create(createUserDto);
 
       expect(usersRepository.findOne).toHaveBeenCalledTimes(2);
       expect(usersRepository.create).toHaveBeenCalledWith(createUserDto);
+      expect(bcryptHashService.hash).toHaveBeenCalledWith(createUserDto.password);
       expect(usersRepository.save).toHaveBeenCalled();
     });
 

@@ -3,14 +3,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { HashServiceAbstract } from 'src/auth/hash/hash.service.abstract';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
+    private readonly bcryptHashService: HashServiceAbstract,
   ) {}
 
   findAll(paginationDto: PaginationDto) {
@@ -69,7 +70,7 @@ export class UsersService {
 
     const newUser = this.usersRepository.create(createUserDto);
 
-    newUser.password = await bcrypt.hashSync(createUserDto.password, 12);
+    newUser.password = this.bcryptHashService.hash(createUserDto.password);
 
     return this.usersRepository.save(newUser);
   }
