@@ -6,22 +6,24 @@ import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { Response } from 'express';
-import * as bcrypt from 'bcrypt';
 import { HttpException } from '@nestjs/common';
+import { HashServiceAbstract } from './hash/hash.service.abstract';
+import { UsersService } from 'src/users/users.service';
 
 describe('AuthService', () => {
   let authService: AuthService;
-  let usersRepository: Repository<UserEntity>;
+  let usersService: UsersService;
   let jwtService: JwtService;
+  let bcryptHashService: HashServiceAbstract;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
         {
-          provide: getRepositoryToken(UserEntity),
+          provide: UsersService,
           useValue: {
-            findOneBy: jest.fn(),
+            findOneByName: jest.fn(),
           },
         },
         {
@@ -30,12 +32,19 @@ describe('AuthService', () => {
             signAsync: jest.fn(),
           },
         },
+        {
+          provide: HashServiceAbstract,
+          useValue: {
+            compare: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
-    usersRepository = module.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
+    usersService = module.get<UsersService>(UsersService);
     jwtService = module.get<JwtService>(JwtService);
+    bcryptHashService = module.get<HashServiceAbstract>(HashServiceAbstract);
   });
 
   describe('Login user', () => {
@@ -57,12 +66,12 @@ describe('AuthService', () => {
         password: 'testTEST',
       };
 
-      jest.spyOn(usersRepository, 'findOneBy').mockResolvedValue(mockUserPartial as UserEntity);
-      jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
+      jest.spyOn(usersService, 'findOneByName').mockResolvedValue(mockUserPartial as UserEntity);
+      jest.spyOn(bcryptHashService, 'compare').mockResolvedValue(true);
 
       await authService.in(createAuthDto, res as Response);
 
-      expect(usersRepository.findOneBy).toHaveBeenCalled();
+      expect(usersService.findOneByName).toHaveBeenCalled();
       expect(jwtService.signAsync).toHaveBeenCalled();
       expect(res.cookie).toHaveBeenCalled();
       expect(res.status).toHaveBeenCalled();
@@ -77,11 +86,11 @@ describe('AuthService', () => {
 
       const res: any  = {};
 
-      jest.spyOn(usersRepository, 'findOneBy').mockResolvedValue(null);
+      jest.spyOn(usersService, 'findOneByName').mockResolvedValue(null);
 
       await expect(authService.in(createUserDto, res as Response)).rejects.toThrow(HttpException);
 
-      expect(usersRepository.findOneBy).toHaveBeenCalled();
+      expect(usersService.findOneByName).toHaveBeenCalled();
     });
 
     it('should return password incorrect', async () => {
@@ -92,7 +101,7 @@ describe('AuthService', () => {
 
       const res: any  = {};
 
-      jest.spyOn(bcrypt, 'compare').mockResolvedValue(false);
+      jest.spyOn(bcryptHashService, 'compare').mockResolvedValue(false);
 
       await expect(authService.in(createAuthDto, res as Response))
         .rejects.toThrow(HttpException);

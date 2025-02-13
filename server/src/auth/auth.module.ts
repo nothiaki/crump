@@ -1,12 +1,19 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { HashServiceAbstract } from './hash/hash.service.abstract';
+import { BcryptHashService } from './hash/bcrypt-hash.service';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity])],
+  imports: [UsersModule],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    {
+      provide: HashServiceAbstract,
+      useClass: BcryptHashService,
+    },
+  ],
 })
 export class AuthModule {}

@@ -1,30 +1,26 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from 'src/users/entities/user.entity';
-import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
+import { HashServiceAbstract } from './hash/hash.service.abstract';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly usersRepository: Repository<UserEntity>,
+    private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly bcryptHashService: HashServiceAbstract,
   ) {}
 
   async in(createAuthDto: CreateAuthDto, res: Response) {
-    const user = await this.usersRepository.findOneBy({
-      name: createAuthDto.name
-    });
+    const user = await this.usersService.findOneByName(createAuthDto.name);
 
     if (!user) {
       throw new HttpException('user or password are incorrects', HttpStatus.BAD_REQUEST);
     }
 
-    const isValidPassword = await bcrypt.compare(createAuthDto.password, user.password);
+    const isValidPassword = await this.bcryptHashService.compare(createAuthDto.password, user.password);
 
     if (!isValidPassword) {
       throw new HttpException('user or password are incorrects', HttpStatus.BAD_REQUEST);
