@@ -24,7 +24,7 @@ describe('UsersController', () => {
             remove: jest.fn(),
           },
         },
-        JwtService,//from AuthGuard
+        JwtService, //from AuthGuard
       ],
     }).compile();
 

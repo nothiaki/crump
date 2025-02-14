@@ -38,15 +38,17 @@ describe('UsersService', () => {
     }).compile();
 
     usersService = module.get<UsersService>(UsersService);
-    usersRepository = module.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
+    usersRepository = module.get<Repository<UserEntity>>(
+      getRepositoryToken(UserEntity),
+    );
     hashService = module.get<HashServiceAbstract>(HashServiceAbstract);
   });
-  
+
   describe('Find all users', () => {
     it('should find all users', async () => {
       const paginationDto: PaginationDto = {
         limit: 1,
-        offset: 1
+        offset: 1,
       };
 
       await usersService.findAll(paginationDto);
@@ -60,7 +62,7 @@ describe('UsersService', () => {
       });
     });
   });
-  
+
   describe('Find one user', () => {
     it('should find one user', async () => {
       const id: string = 'cd674539-4a10-42af-b658-2da0a710dc8a';
@@ -70,7 +72,9 @@ describe('UsersService', () => {
         email: 'test@test.test',
       };
 
-      jest.spyOn(usersRepository, 'findOneBy').mockResolvedValue(mockUserPartial as UserEntity);
+      jest
+        .spyOn(usersRepository, 'findOneBy')
+        .mockResolvedValue(mockUserPartial as UserEntity);
 
       const response = await usersService.findOne(id);
 
@@ -87,7 +91,7 @@ describe('UsersService', () => {
       expect(usersRepository.findOneBy).toHaveBeenCalledWith({ id });
     });
   });
-  
+
   describe('Create user', () => {
     it('should create a user', async () => {
       const createUserDto: CreateUserDto = {
@@ -118,7 +122,9 @@ describe('UsersService', () => {
         email: 'test@test.test',
       } as UserEntity);
 
-      await expect(usersService.create(createUserDto)).rejects.toThrow(HttpException);
+      await expect(usersService.create(createUserDto)).rejects.toThrow(
+        HttpException,
+      );
       expect(usersRepository.findOne).toHaveBeenCalled();
     });
 
@@ -129,18 +135,21 @@ describe('UsersService', () => {
         password: 'testTEST',
       };
 
-      jest.spyOn(usersRepository, 'findOne')
+      jest
+        .spyOn(usersRepository, 'findOne')
         .mockResolvedValueOnce(null)
         .mockResolvedValueOnce({
-        id: 'd813d58b-4b2d-4ce8-8d89-bb90acc1d6d7',
-        name: 'test',
-      } as UserEntity);
+          id: 'd813d58b-4b2d-4ce8-8d89-bb90acc1d6d7',
+          name: 'test',
+        } as UserEntity);
 
-      await expect(usersService.create(createUserDto)).rejects.toThrow(HttpException);
+      await expect(usersService.create(createUserDto)).rejects.toThrow(
+        HttpException,
+      );
       expect(usersRepository.findOne).toHaveBeenCalled();
     });
   });
-  
+
   describe('Delete one user', () => {
     it('should delete one user', async () => {
       await usersService.remove('46421185-f2dc-45c9-af9e-cf98186fa486');
@@ -155,8 +164,10 @@ describe('UsersService', () => {
       jest.spyOn(usersRepository, 'preload').mockResolvedValue(null);
 
       await expect(usersService.remove(id)).rejects.toThrow(HttpException);
-      expect(usersRepository.preload).toHaveBeenCalledWith({ id, isActive: false, });
+      expect(usersRepository.preload).toHaveBeenCalledWith({
+        id,
+        isActive: false,
+      });
     });
   });
 });
-

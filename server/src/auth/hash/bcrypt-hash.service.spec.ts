@@ -1,6 +1,6 @@
-import { Test, TestingModule } from "@nestjs/testing";
+import { Test, TestingModule } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
-import { BcryptHashService } from "./bcrypt-hash.service";
+import { BcryptHashService } from './bcrypt-hash.service';
 
 jest.mock('bcrypt', () => ({
   compare: jest.fn().mockResolvedValue(true),

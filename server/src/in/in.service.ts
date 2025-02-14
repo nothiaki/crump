@@ -17,27 +17,35 @@ export class InService {
     const user = await this.usersService.findOneByName(createInDto.name);
 
     if (!user) {
-      throw new HttpException('user or password are incorrects', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'user or password are incorrects',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    const isValidPassword = await this.hashService.compare(createInDto.password, user.password);
+    const isValidPassword = await this.hashService.compare(
+      createInDto.password,
+      user.password,
+    );
 
     if (!isValidPassword) {
-      throw new HttpException('user or password are incorrects', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'user or password are incorrects',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const token = await this.jwtService.signAsync({
       sub: user.id,
-      name: createInDto.name
+      name: createInDto.name,
     });
 
-    res.cookie('token', token,
-      {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 1, //1 hour
-        sameSite: 'strict',
-      });
-    
+    res.cookie('token', token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 1, //1 hour
+      sameSite: 'strict',
+    });
+
     return res.status(HttpStatus.OK).send();
   }
 }

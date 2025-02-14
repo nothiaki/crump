@@ -43,7 +43,6 @@ describe('AuthGuard', () => {
     expect(jwtService.verifyAsync).toHaveBeenCalledWith(token);
   });
 
-
   it('should get the token from cookies', async () => {
     const token: string = 'randomtoken';
 

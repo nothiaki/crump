@@ -18,7 +18,7 @@ describe('CrumpsController', () => {
           provide: CrumpsService,
           useValue: {
             findAll: jest.fn(),
-            create: jest.fn().mockResolvedValue({ from: {}, }),
+            create: jest.fn().mockResolvedValue({ from: {} }),
             remove: jest.fn(),
           },
         },
@@ -56,5 +56,4 @@ describe('CrumpsController', () => {
     await crumpsController.remove(id);
     expect(crumpsService.remove).toHaveBeenCalledWith(id);
   });
-
 });

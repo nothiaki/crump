@@ -38,7 +38,9 @@ describe('CrumpsService', () => {
     }).compile();
 
     crumpsService = module.get<CrumpsService>(CrumpsService);
-    crumpsRepository = module.get<Repository<CrumpEntity>>(getRepositoryToken(CrumpEntity));
+    crumpsRepository = module.get<Repository<CrumpEntity>>(
+      getRepositoryToken(CrumpEntity),
+    );
     usersService = module.get<UsersService>(UsersService);
   });
 
@@ -67,7 +69,7 @@ describe('CrumpsService', () => {
 
       jest.spyOn(usersService, 'findOneByName').mockResolvedValue({
         id: '62899595-1fd2-480a-9963-bed113857a96',
-        name: 'tester'
+        name: 'tester',
       } as UserEntity);
 
       await crumpsService.create(createCrumpDto);
@@ -85,8 +87,12 @@ describe('CrumpsService', () => {
 
       jest.spyOn(usersService, 'findOneByName').mockResolvedValue(null);
 
-      await expect(crumpsService.create(createCrumpDto)).rejects.toThrow(HttpException);
-      expect(usersService.findOneByName).toHaveBeenCalledWith(createCrumpDto.from);
+      await expect(crumpsService.create(createCrumpDto)).rejects.toThrow(
+        HttpException,
+      );
+      expect(usersService.findOneByName).toHaveBeenCalledWith(
+        createCrumpDto.from,
+      );
     });
   });
 
@@ -99,7 +105,9 @@ describe('CrumpsService', () => {
         content: 'test',
       };
 
-      jest.spyOn(crumpsRepository, 'findOneBy').mockResolvedValue(mockCrumpPartial as CrumpEntity);
+      jest
+        .spyOn(crumpsRepository, 'findOneBy')
+        .mockResolvedValue(mockCrumpPartial as CrumpEntity);
 
       await crumpsService.remove(id);
 

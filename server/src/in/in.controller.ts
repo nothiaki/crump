@@ -8,10 +8,7 @@ export class InController {
   constructor(private readonly inService: InService) {}
 
   @Post()
-  create(
-    @Body() createInDto: CreateInDto,
-    @Res() res: Response
-  ) {
+  create(@Body() createInDto: CreateInDto, @Res() res: Response) {
     return this.inService.in(createInDto, res);
   }
 }

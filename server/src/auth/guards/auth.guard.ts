@@ -1,4 +1,10 @@
-import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
@@ -11,16 +17,21 @@ export class AuthGuard implements CanActivate {
     const token = this.getTokenFromCookie(req);
 
     if (!token) {
-      throw new HttpException('You must be logged in to access this route', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        'You must be logged in to access this route',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     try {
       await this.jwtService.verifyAsync(token);
 
       return true;
-
-    } catch (error) {
-      throw new HttpException('You must be logged in to access this route', HttpStatus.UNAUTHORIZED);
+    } catch (error: unknown) {
+      throw new HttpException(
+        'You must be logged in to access this route',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
   }
 

@@ -52,19 +52,21 @@ describe('InService', () => {
         password: 'testTEST',
       };
 
-      const res: any  = {
+      const res: any = {
         cookie: jest.fn(),
         status: jest.fn().mockReturnThis(),
         send: jest.fn(),
       };
-      
+
       const mockUserPartial = {
         id: '389707ad-3526-4617-a1d6-83bc559a2066',
         name: 'test',
         password: 'testTEST',
       };
 
-      jest.spyOn(usersService, 'findOneByName').mockResolvedValue(mockUserPartial as UserEntity);
+      jest
+        .spyOn(usersService, 'findOneByName')
+        .mockResolvedValue(mockUserPartial as UserEntity);
       jest.spyOn(hashService, 'compare').mockResolvedValue(true);
 
       await inService.in(createInDto, res as Response);
@@ -82,11 +84,13 @@ describe('InService', () => {
         password: 'testTEST',
       };
 
-      const res: any  = {};
+      const res: any = {};
 
       jest.spyOn(usersService, 'findOneByName').mockResolvedValue(null);
 
-      await expect(inService.in(createInDto, res as Response)).rejects.toThrow(HttpException);
+      await expect(inService.in(createInDto, res as Response)).rejects.toThrow(
+        HttpException,
+      );
 
       expect(usersService.findOneByName).toHaveBeenCalled();
     });
@@ -97,12 +101,13 @@ describe('InService', () => {
         password: 'testTEST',
       };
 
-      const res: any  = {};
+      const res: any = {};
 
       jest.spyOn(hashService, 'compare').mockResolvedValue(false);
 
-      await expect(inService.in(createInDto, res as Response))
-        .rejects.toThrow(HttpException);
+      await expect(inService.in(createInDto, res as Response)).rejects.toThrow(
+        HttpException,
+      );
     });
   });
 });
